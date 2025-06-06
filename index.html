@@ -19,7 +19,22 @@
         <div class="row">
             <div class="col-12">
                 <h1 class="text-center mb-4">互動式鋼琴</h1>
+                <div class="octave-controls text-center mb-3">
+                    <button id="decrease-octave" class="btn btn-secondary">降低八度(Z)</button>
+                    <span id="current-octave" class="mx-3">八度：4</span>
+                    <button id="increase-octave" class="btn btn-secondary">提高八度(X)</button>
+                </div>
                 <div id="piano-container" class="d-flex justify-content-center mb-4"></div>
+                
+                <!-- 節拍器控制項 -->
+                <div class="metronome-controls text-center mb-4">
+                    <h5>節拍器</h5>
+                    <div class="mb-3">
+                        <label for="tempo" class="form-label">速度 (BPM)：<span id="tempo-value">120</span></label>
+                        <input type="range" class="form-range" id="tempo" min="40" max="208" value="120">
+                    </div>
+                    <button id="metronome-btn" class="btn btn-info">開始節拍器</button>
+                </div>
             </div>
         </div>
 

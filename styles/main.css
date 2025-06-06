@@ -1,19 +1,21 @@
 .piano-key {
-    width: 60px;
-    height: 200px;
+    display: inline-block;
+    width: 40px;
+    height: 160px;
     border: 1px solid #000;
     background-color: white;
-    margin: 0 2px;
+    margin: 0;
     cursor: pointer;
     position: relative;
+    vertical-align: top;
 }
 
 .piano-key.black {
-    width: 40px;
-    height: 120px;
+    width: 24px;
+    height: 100px;
     background-color: #000;
     position: absolute;
-    margin-left: -20px;
+    margin-left: -12px;
     z-index: 1;
 }
 
@@ -31,19 +33,31 @@
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.octave-container {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 200px;
 }
 
 .key-label {
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     width: 100%;
     text-align: center;
-    font-size: 14px;
+    font-size: 10px;
     color: #666;
 }
 
 .black .key-label {
     color: white;
+    bottom: 2px;
+    font-size: 8px;
 }
 
 .card {
@@ -57,4 +71,30 @@
 
 .navbar {
     margin-bottom: 2rem;
+}
+
+/* 新增適應性佈局 */
+@media (max-width: 768px) {
+    #piano-container {
+        padding: 10px;
+    }
+
+    .piano-key {
+        width: 30px;
+        height: 120px;
+    }
+
+    .piano-key.black {
+        width: 20px;
+        height: 80px;
+        margin-left: -10px;
+    }
+
+    .key-label {
+        font-size: 8px;
+    }
+
+    .black .key-label {
+        font-size: 7px;
+    }
 }
