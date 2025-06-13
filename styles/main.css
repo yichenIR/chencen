@@ -1,23 +1,36 @@
 .piano-key {
-    display: inline-block;
-    width: 40px;
-    height: 160px;
-    border: 1px solid #000;
+    width: 45px;
+    height: 180px;
+    border: 1px solid #333;
     background-color: white;
-    margin: 0;
     cursor: pointer;
     position: relative;
-    vertical-align: top;
+    border-radius: 0 0 5px 5px;
+    margin: 0;
+    transition: background-color 0.1s;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
 }
 
 .piano-key.black {
-    width: 24px;
-    height: 100px;
+    width: 30px;
+    height: 110px;
     background-color: #000;
     position: absolute;
-    margin-left: -12px;
     z-index: 1;
+    margin: 0;
+    border: none;
+    border-radius: 0 0 3px 3px;
 }
+
+/* 定位每個黑鍵 */
+.piano-key.black[data-position="0"] { left: 30px; }  /* C# */
+.piano-key.black[data-position="1"] { left: 75px; }  /* D# */
+.piano-key.black[data-position="2"] { left: 165px; } /* F# */
+.piano-key.black[data-position="3"] { left: 210px; } /* G# */
+.piano-key.black[data-position="4"] { left: 255px; } /* A# */
 
 .piano-key.active {
     background-color: #e0e0e0;
@@ -33,16 +46,25 @@
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 250px;
+    width: 100%;
     overflow-x: auto;
-    white-space: nowrap;
 }
 
-.octave-container {
-    display: inline-block;
+.white-keys {
+    display: flex;
     position: relative;
-    margin: 0;
-    padding: 0;
-    height: 200px;
+    margin-top: 60px;
+}
+
+.black-keys {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 0;
+    justify-content: center;
 }
 
 .key-label {
@@ -50,14 +72,15 @@
     bottom: 5px;
     width: 100%;
     text-align: center;
-    font-size: 10px;
-    color: #666;
+    font-size: 12px;
+    color: #333;
+    pointer-events: none;
 }
 
 .black .key-label {
     color: white;
-    bottom: 2px;
-    font-size: 8px;
+    font-size: 10px;
+    bottom: 5px;
 }
 
 .card {

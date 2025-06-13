@@ -9,10 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tempoSlider = document.getElementById('tempo');
     const tempoValue = document.getElementById('tempo-value');
     
-    // 鋼琴音符設定
-    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const startOctave = 3; // 起始八度音
-    const endOctave = 5;   // 結束八度音
+    // 音符設定
+    const notes = {
+        white: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        black: ['C#', 'D#', 'F#', 'G#', 'A#']
+    };
+    const octaves = [3, 4];
     let synth = null;
 
     // 節拍器設定
@@ -22,36 +24,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始化 Tone.js
     async function initAudio() {
         await Tone.start();
-        synth = new Tone.Synth().toDestination();
+        synth = new Tone.PolySynth(Tone.Synth).toDestination();
     }
 
     // 創建鋼琴鍵盤
     function createPiano() {
-        for (let octave = startOctave; octave <= endOctave; octave++) {
-            const octaveContainer = document.createElement('div');
-            octaveContainer.className = 'octave-container';
-            
-            notes.forEach((note, index) => {
-                const key = document.createElement('div');
-                key.className = `piano-key ${note.includes('#') ? 'black' : 'white'}`;
-                key.dataset.note = note + octave;
-                
-                // 加入音符標籤
-                const label = document.createElement('div');
-                label.className = 'key-label';
-                label.textContent = `${note}${octave}`;
-                key.appendChild(label);
-
-                // 點擊事件
-                key.addEventListener('mousedown', () => playNote(note + octave));
-                key.addEventListener('mouseup', () => stopNote());
-                key.addEventListener('mouseleave', () => stopNote());
-                
-                octaveContainer.appendChild(key);
+        const whiteKeysContainer = document.createElement('div');
+        whiteKeysContainer.className = 'white-keys';
+        const blackKeysContainer = document.createElement('div');
+        blackKeysContainer.className = 'black-keys';
+        
+        octaves.forEach(octave => {
+            // 創建白鍵
+            notes.white.forEach((note, index) => {
+                const key = createKey(note, octave, false);
+                whiteKeysContainer.appendChild(key);
             });
             
-            pianoContainer.appendChild(octaveContainer);
-        }
+            // 創建黑鍵
+            notes.black.forEach((note, index) => {
+                const key = createKey(note, octave, true);
+                key.dataset.position = index.toString();
+                blackKeysContainer.appendChild(key);
+            });
+        });
+
+        pianoContainer.appendChild(whiteKeysContainer);
+        pianoContainer.appendChild(blackKeysContainer);
+    }
+
+    // 創建單個琴鍵
+    function createKey(note, octave, isBlack) {
+        const key = document.createElement('div');
+        key.className = `piano-key ${isBlack ? 'black' : 'white'}`;
+        key.dataset.note = `${note}${octave}`;
+        
+        const label = document.createElement('div');
+        label.className = 'key-label';
+        label.textContent = `${note}${octave}`;
+        key.appendChild(label);
+
+        key.addEventListener('mousedown', () => playNote(note + octave));
+        key.addEventListener('mouseup', () => stopNote());
+        key.addEventListener('mouseleave', () => stopNote());
+
+        return key;
     }
 
     // 播放音符
@@ -75,116 +92,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 練習模式
-    let practiceMode = false;
-    let currentNote = null;
-    let correctNotes = 0;
-    const totalNotes = 8; // 練習目標音符數
-
-    function startPractice() {
-        practiceMode = true;
-        correctNotes = 0;
-        updateProgress();
-        selectRandomNote();
-        practiceBtn.textContent = '練習中...';
-    }
-
-    function selectRandomNote() {
-        const randomOctave = Math.floor(Math.random() * (endOctave - startOctave + 1)) + startOctave;
-        const randomIndex = Math.floor(Math.random() * notes.length);
-        const selectedNote = notes[randomIndex];
-        currentNote = selectedNote + randomOctave;
-        alert(`請彈奏 ${selectedNote}${randomOctave} 音符`);
-    }
-
-    function checkNote(playedNote) {
-        if (!practiceMode || !currentNote) return;
+    // 鍵盤映射
+    const keyMap = {
+        // 第一個八度 (低音)
+        'z': 'C3', 'x': 'D3', 'c': 'E3', 
+        'v': 'F3', 'b': 'G3', 'n': 'A3', 
+        'm': 'B3', 's': 'C#3', 'd': 'D#3',
+        'g': 'F#3', 'h': 'G#3', 'j': 'A#3',
         
-        if (playedNote === currentNote) {
-            correctNotes++;
-            updateProgress();
-            
-            if (correctNotes >= totalNotes) {
-                alert('恭喜完成練習！');
-                practiceMode = false;
-                practiceBtn.textContent = '開始練習';
-                return;
-            }
-            
-            selectRandomNote();
-        }
-    }
-
-    function updateProgress() {
-        const progress = (correctNotes / totalNotes) * 100;
-        progressElement.textContent = `${Math.round(progress)}%`;
-    }
-
-    // 節拍器相關
-    function initMetronome() {
-        const clickSound = new Tone.Player({
-            url: 'https://tonejs.github.io/audio/berklee/woodblock.mp3',
-            autostart: false
-        }).toDestination();
-
-        return new Tone.Loop(time => {
-            clickSound.start(time);
-        }, '4n');
-    }
-
-    function updateTempo(value) {
-        if (metronome) {
-            Tone.Transport.bpm.value = value;
-            tempoValue.textContent = value;
-        }
-    }
-
-    function toggleMetronome() {
-        if (!metronome) {
-            metronome = initMetronome();
-        }
-
-        if (!isMetronomeOn) {
-            Tone.Transport.start();
-            metronome.start(0);
-            isMetronomeOn = true;
-            metronomeBtn.textContent = '停止節拍器';
-            metronomeBtn.classList.replace('btn-info', 'btn-warning');
-        } else {
-            Tone.Transport.stop();
-            metronome.stop();
-            isMetronomeOn = false;
-            metronomeBtn.textContent = '開始節拍器';
-            metronomeBtn.classList.replace('btn-warning', 'btn-info');
-        }
-    }
-
-    // 更新八度音顯示
-    function updateOctaveDisplay() {
-        currentOctaveDisplay.textContent = `八度：${currentOctave}`;
-    }
-
-    // 鍵盤對應
-    const keyboardMap = {
-        'a': 'C', 's': 'D', 'd': 'E', 'f': 'F', 'g': 'G', 'h': 'A', 'j': 'B',
-        'w': 'C#', 'e': 'D#', 't': 'F#', 'y': 'G#', 'u': 'A#'
+        // 第二個八度 (高音)
+        'q': 'C4', 'w': 'D4', 'e': 'E4',
+        'r': 'F4', 't': 'G4', 'y': 'A4',
+        'u': 'B4', '2': 'C#4', '3': 'D#4',
+        '5': 'F#4', '6': 'G#4', '7': 'A#4'
     };
 
-    let currentOctave = 4; // 當前選擇的八度音
-    
-    // 鍵盤控制
+    // 鍵盤事件處理
     document.addEventListener('keydown', (e) => {
-        const note = keyboardMap[e.key.toLowerCase()];
-        if (note) {
-            e.preventDefault();
-            playNote(note + currentOctave);
-        }
-        // 切換八度音
-        else if (e.key === 'z' && currentOctave > startOctave) {
-            currentOctave--;
-        }
-        else if (e.key === 'x' && currentOctave < endOctave) {
-            currentOctave++;
+        if (keyMap[e.key] && !e.repeat) {
+            playNote(keyMap[e.key]);
         }
     });
 
