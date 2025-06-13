@@ -2,6 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const pianoContainer = document.getElementById('piano-container');
     const practiceBtn = document.getElementById('practice-btn');
     const progressElement = document.getElementById('progress');
+    const decreaseOctaveBtn = document.getElementById('decrease-octave');
+    const increaseOctaveBtn = document.getElementById('increase-octave');
+    const currentOctaveDisplay = document.getElementById('current-octave');
+    const metronomeBtn = document.getElementById('metronome-btn');
+    const tempoSlider = document.getElementById('tempo');
+    const tempoValue = document.getElementById('tempo-value');
     
     // 音符設定
     const notes = {
@@ -10,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const octaves = [3, 4];
     let synth = null;
+
+    // 節拍器設定
+    let metronome = null;
+    let isMetronomeOn = false;
 
     // 初始化 Tone.js
     async function initAudio() {
@@ -67,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
         synth.triggerAttack(note);
         const key = document.querySelector(`[data-note="${note}"]`);
         if (key) key.classList.add('active');
+
+        if (practiceMode) {
+            checkNote(note);
+        }
     }
 
     // 停止播放
@@ -101,12 +115,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keyup', (e) => {
-        if (keyMap[e.key]) {
+        if (keyboardMap[e.key.toLowerCase()]) {
             stopNote();
         }
     });
 
     // 初始化
-    initAudio();
-    createPiano();
+    initAudio().then(() => {
+        createPiano();
+        updateOctaveDisplay();
+    });
+
+    // 事件監聽
+    practiceBtn.addEventListener('click', startPractice);
+
+    decreaseOctaveBtn.addEventListener('click', () => {
+        if (currentOctave > startOctave) {
+            currentOctave--;
+            updateOctaveDisplay();
+        }
+    });
+
+    increaseOctaveBtn.addEventListener('click', () => {
+        if (currentOctave < endOctave) {
+            currentOctave++;
+            updateOctaveDisplay();
+        }
+    });
+
+    metronomeBtn.addEventListener('click', () => {
+        toggleMetronome();
+    });
+
+    tempoSlider.addEventListener('input', (e) => {
+        updateTempo(e.target.value);
+    });
 });
