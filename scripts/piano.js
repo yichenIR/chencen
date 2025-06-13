@@ -3,37 +3,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const practiceBtn = document.getElementById('practice-btn');
     const progressElement = document.getElementById('progress');
     
-    // 鋼琴音符設定
-    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const octave = 4; // 起始八度音
+    // 音符設定
+    const notes = {
+        white: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        black: ['C#', 'D#', 'F#', 'G#', 'A#']
+    };
+    const octaves = [3, 4];
     let synth = null;
 
     // 初始化 Tone.js
     async function initAudio() {
         await Tone.start();
-        synth = new Tone.Synth().toDestination();
+        synth = new Tone.PolySynth(Tone.Synth).toDestination();
     }
 
     // 創建鋼琴鍵盤
     function createPiano() {
-        notes.forEach((note, index) => {
-            const key = document.createElement('div');
-            key.className = `piano-key ${note.includes('#') ? 'black' : 'white'}`;
-            key.dataset.note = note + octave;
+        const whiteKeysContainer = document.createElement('div');
+        whiteKeysContainer.className = 'white-keys';
+        const blackKeysContainer = document.createElement('div');
+        blackKeysContainer.className = 'black-keys';
+        
+        octaves.forEach(octave => {
+            // 創建白鍵
+            notes.white.forEach((note, index) => {
+                const key = createKey(note, octave, false);
+                whiteKeysContainer.appendChild(key);
+            });
             
-            // 加入音符標籤
-            const label = document.createElement('div');
-            label.className = 'key-label';
-            label.textContent = note;
-            key.appendChild(label);
-
-            // 點擊事件
-            key.addEventListener('mousedown', () => playNote(note + octave));
-            key.addEventListener('mouseup', () => stopNote());
-            key.addEventListener('mouseleave', () => stopNote());
-            
-            pianoContainer.appendChild(key);
+            // 創建黑鍵
+            notes.black.forEach((note, index) => {
+                const key = createKey(note, octave, true);
+                key.dataset.position = index.toString();
+                blackKeysContainer.appendChild(key);
+            });
         });
+
+        pianoContainer.appendChild(whiteKeysContainer);
+        pianoContainer.appendChild(blackKeysContainer);
+    }
+
+    // 創建單個琴鍵
+    function createKey(note, octave, isBlack) {
+        const key = document.createElement('div');
+        key.className = `piano-key ${isBlack ? 'black' : 'white'}`;
+        key.dataset.note = `${note}${octave}`;
+        
+        const label = document.createElement('div');
+        label.className = 'key-label';
+        label.textContent = `${note}${octave}`;
+        key.appendChild(label);
+
+        key.addEventListener('mousedown', () => playNote(note + octave));
+        key.addEventListener('mouseup', () => stopNote());
+        key.addEventListener('mouseleave', () => stopNote());
+
+        return key;
     }
 
     // 播放音符
@@ -53,63 +78,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 練習模式
-    let practiceMode = false;
-    let currentNote = null;
-    let correctNotes = 0;
-    const totalNotes = 8; // 練習目標音符數
-
-    function startPractice() {
-        practiceMode = true;
-        correctNotes = 0;
-        updateProgress();
-        selectRandomNote();
-        practiceBtn.textContent = '練習中...';
-    }
-
-    function selectRandomNote() {
-        const randomIndex = Math.floor(Math.random() * notes.length);
-        currentNote = notes[randomIndex] + octave;
-        alert(`請彈奏 ${notes[randomIndex]} 音符`);
-    }
-
-    function checkNote(playedNote) {
-        if (!practiceMode || !currentNote) return;
-        
-        if (playedNote === currentNote) {
-            correctNotes++;
-            updateProgress();
-            
-            if (correctNotes >= totalNotes) {
-                alert('恭喜完成練習！');
-                practiceMode = false;
-                practiceBtn.textContent = '開始練習';
-                return;
-            }
-            
-            selectRandomNote();
-        }
-    }
-
-    function updateProgress() {
-        const progress = (correctNotes / totalNotes) * 100;
-        progressElement.textContent = `${Math.round(progress)}%`;
-    }
-
-    // 事件監聽
-    practiceBtn.addEventListener('click', startPractice);
-
-    // 鍵盤控制
+    // 鍵盤映射
     const keyMap = {
-        'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 
-        'd': 'E4', 'f': 'F4', 't': 'F#4', 'g': 'G4',
-        'y': 'G#4', 'h': 'A4', 'u': 'A#4', 'j': 'B4'
+        // 第一個八度 (低音)
+        'z': 'C3', 'x': 'D3', 'c': 'E3', 
+        'v': 'F3', 'b': 'G3', 'n': 'A3', 
+        'm': 'B3', 's': 'C#3', 'd': 'D#3',
+        'g': 'F#3', 'h': 'G#3', 'j': 'A#3',
+        
+        // 第二個八度 (高音)
+        'q': 'C4', 'w': 'D4', 'e': 'E4',
+        'r': 'F4', 't': 'G4', 'y': 'A4',
+        'u': 'B4', '2': 'C#4', '3': 'D#4',
+        '5': 'F#4', '6': 'G#4', '7': 'A#4'
     };
 
+    // 鍵盤事件處理
     document.addEventListener('keydown', (e) => {
         if (keyMap[e.key] && !e.repeat) {
             playNote(keyMap[e.key]);
-            checkNote(keyMap[e.key]);
         }
     });
 
