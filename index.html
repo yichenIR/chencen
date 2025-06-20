@@ -6,60 +6,150 @@
     <title>鋼琴學習網站</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">鋼琴學習</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-music"></i> 鋼琴學習</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features"><i class="fas fa-star"></i> 特色</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#piano"><i class="fas fa-piano"></i> 互動鋼琴</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practice"><i class="fas fa-graduation-cap"></i> 練習區</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
+    <!-- 主要橫幅 -->
+    <div class="hero-section text-center py-5 bg-light">
+        <div class="container">
+            <h1 class="display-4 mb-3">探索鋼琴的奧妙世界</h1>
+            <p class="lead mb-4">透過互動式學習，開啟您的音樂之旅</p>
+            <a href="#piano" class="btn btn-primary btn-lg"><i class="fas fa-play"></i> 立即開始</a>
+        </div>
+    </div>
+
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center mb-4">互動式鋼琴</h1>
-                <div class="octave-controls text-center mb-3">
-                    <button id="decrease-octave" class="btn btn-secondary">降低八度(Z)</button>
-                    <span id="current-octave" class="mx-3">八度：4</span>
-                    <button id="increase-octave" class="btn btn-secondary">提高八度(X)</button>
+        <!-- 特色區塊 -->
+        <section id="features" class="mb-5">
+            <h2 class="text-center mb-4">學習特色</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-3">
+                        <i class="fas fa-keyboard fa-3x mb-3 text-primary"></i>
+                        <h3>互動式鋼琴</h3>
+                        <p>使用鍵盤或滑鼠，體驗真實的鋼琴彈奏感覺</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-3">
+                        <i class="fas fa-clock fa-3x mb-3 text-primary"></i>
+                        <h3>智能節拍器</h3>
+                        <p>可調節速度的視覺化節拍器，幫助掌握節奏</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-3">
+                        <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                        <h3>進度追蹤</h3>
+                        <p>記錄您的學習歷程，檢視進步情況</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 互動鋼琴區塊 -->
+        <section id="piano" class="mb-5">
+            <h2 class="text-center mb-4">互動 Piano</h2>
+            <div class="piano-container">
+                <div class="keyboard-shortcuts alert alert-info mb-3">
+                    <h5><i class="fas fa-keyboard"></i> 鍵盤對應：</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2">低音區：Z-M (白鍵) / S-J (黑鍵)</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">高音區：Q-U (白鍵) / 2-7 (黑鍵)</p>
+                        </div>
+                    </div>
                 </div>
                 <div id="piano-container" class="d-flex justify-content-center mb-4"></div>
-                
-                <!-- 節拍器控制項 -->
-                <div class="metronome-controls text-center mb-4">
-                    <h5>節拍器</h5>
-                    <div class="mb-3">
-                        <label for="tempo" class="form-label">速度 (BPM)：<span id="tempo-value">120</span></label>
-                        <input type="range" class="form-range" id="tempo" min="40" max="208" value="120">
-                    </div>
-                    <button id="metronome-btn" class="btn btn-info">開始節拍器</button>
-                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">基礎練習</h5>
-                        <p class="card-text">點擊按鈕開始練習基本音階</p>
-                        <button id="practice-btn" class="btn btn-primary">開始練習</button>
+        <!-- 節拍器區塊 -->
+        <section class="mb-5">
+            <div class="metronome-section">
+                <h3 class="text-center mb-3">節拍器</h3>
+                <div class="metronome-container">
+                    <div class="metronome-ball"></div>
+                </div>
+                <div class="tempo-control">
+                    <div class="tempo-display">速度：<span id="tempo-value">120</span> BPM</div>
+                    <input type="range" class="form-range" id="tempo" min="40" max="208" value="120">
+                </div>
+                <button id="metronome-btn" class="btn btn-info mt-2">開始節拍器</button>
+            </div>
+        </section>
+
+        <!-- 練習區塊 -->
+        <section id="practice" class="mb-5">
+            <h2 class="text-center mb-4">練習專區</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 practice-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-music"></i> 基礎練習</h5>
+                            <p class="card-text">循序漸進的基礎音階練習，適合初學者</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> 單一八度練習</li>
+                                <li><i class="fas fa-check text-success"></i> 即時反饋</li>
+                                <li><i class="fas fa-check text-success"></i> 進度追蹤</li>
+                            </ul>
+                            <a href="practice.html" class="btn btn-primary">開始練習</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">學習進度</h5>
-                        <div id="progress-display">
-                            <p>完成度: <span id="progress">0%</span></p>
+                <div class="col-md-6">
+                    <div class="card h-100 progress-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chart-line"></i> 學習進度</h5>
+                            <div id="progress-display">
+                                <div class="progress mb-3">
+                                    <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <p class="mb-0">完成度: <span id="progress">0%</span></p>
+                            </div>
+                            <div class="mt-3">
+                                <h6><i class="fas fa-trophy"></i> 近期成就</h6>
+                                <ul class="list-unstyled" id="achievements">
+                                    <li class="text-muted">尚未開始練習</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">製作者：鋼琴學習網站團隊 © 2025</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

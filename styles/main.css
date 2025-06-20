@@ -121,3 +121,103 @@
         font-size: 7px;
     }
 }
+
+/* 節拍器樣式 */
+.metronome-container {
+    position: relative;
+    width: 200px;
+    height: 60px;
+    margin: 20px auto;
+    background-color: #f0f0f0;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.metronome-ball {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #007bff;
+    border-radius: 50%;
+    top: 15px;
+    left: 15px;
+    transition: transform 0.1s linear;
+}
+
+.tempo-control {
+    width: 200px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.tempo-display {
+    font-size: 1.2em;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* 新增的樣式 */
+.hero-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px 0;
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.keyboard-shortcuts {
+    background-color: rgba(0,123,255,0.1);
+    border-color: rgba(0,123,255,0.2);
+}
+
+.practice-card, .progress-card {
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.practice-card:hover, .progress-card:hover {
+    transform: translateY(-5px);
+}
+
+.progress {
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.achievements li {
+    padding: 5px 0;
+}
+
+.achievements i {
+    margin-right: 8px;
+}
+
+/* 響應式設計優化 */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0;
+    }
+    
+    .feature-card {
+        margin-bottom: 20px;
+    }
+    
+    .keyboard-shortcuts {
+        font-size: 0.9em;
+    }
+}
